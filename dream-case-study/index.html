@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Camino 90s Love Personality Test</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --midnight: #24142f;
+      --paper: #fff8fb;
+      --ink: #2a1a2f;
+      --hot-pink: #ff4fb8;
+      --bubblegum: #ff8fd3;
+      --sun: #ffd447;
+      --violet: #8d5cff;
+      --cyan: #39d5ff;
+      --mint: #6df7c1;
+      --coral: #ff725e;
+      --card: rgba(255,255,255,0.78);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', system-ui, sans-serif;
+      color: var(--ink);
+      min-height: 100vh;
+      padding: 28px 18px 80px;
+      background:
+        radial-gradient(circle at 12% 12%, rgba(255,212,71,0.75), transparent 18%),
+        radial-gradient(circle at 86% 8%, rgba(57,213,255,0.65), transparent 22%),
+        radial-gradient(circle at 78% 72%, rgba(141,92,255,0.55), transparent 28%),
+        linear-gradient(135deg, #ff8fd3 0%, #fff0fb 42%, #bff8ff 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.45;
+      background-image:
+        linear-gradient(45deg, rgba(255,255,255,0.35) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(255,255,255,0.25) 25%, transparent 25%);
+      background-size: 34px 34px;
+      mix-blend-mode: screen;
+    }
+
+    .wrapper {
+      max-width: 1120px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: start;
+      margin-bottom: 22px;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #fff;
+      border: 3px solid var(--ink);
+      box-shadow: 5px 5px 0 var(--ink);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      font-size: 12px;
+    }
+
+    .kicker span { color: var(--hot-pink); }
+
+    h1 {
+      margin: 16px 0 8px 0;
+      font-size: clamp(34px, 6vw, 72px);
+      line-height: 0.92;
+      letter-spacing: -2px;
+      text-transform: uppercase;
+      text-shadow: 4px 4px 0 #fff, 7px 7px 0 rgba(42,26,47,0.28);
+    }
+
+    .subhead {
+      margin: 0;
+      max-width: 760px;
+      font-size: 17px;
+      color: #472d53;
+      font-weight: 600;
+    }
+
+    .cover-star {
+      transform: rotate(6deg);
+      background: var(--sun);
+      border: 3px solid var(--ink);
+      box-shadow: 7px 7px 0 var(--ink);
+      border-radius: 18px;
+      padding: 14px;
+      width: 190px;
+      text-align: center;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .cover-star small {
+      display: block;
+      font-size: 11px;
+      margin-top: 3px;
+    }
+
+    .mag-card, .question-card, .results {
+      background: var(--card);
+      border: 3px solid var(--ink);
+      border-radius: 22px;
+      box-shadow: 9px 9px 0 rgba(42,26,47,0.9);
+      padding: 22px;
+      backdrop-filter: blur(5px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mag-card::after, .question-card::after, .results::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.35), transparent 55%);
+      pointer-events: none;
+    }
+
+    .hero { margin-bottom: 18px; }
+
+    h2, h3, h4 { position: relative; z-index: 1; }
+
+    .flex-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta {
+      border: 3px solid var(--ink);
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--hot-pink), var(--sun));
+      color: var(--ink);
+      padding: 12px 18px;
+      font-weight: 800;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 5px 5px 0 var(--ink);
+      transition: transform 140ms ease, box-shadow 140ms ease;
+    }
+
+    .cta:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--ink); }
+    .cta:active { transform: translate(0, 0); box-shadow: 3px 3px 0 var(--ink); }
+    .cta.secondary { background: #fff; }
+
+    .progress {
+      margin: 14px 0 20px;
+      background: rgba(255,255,255,0.65);
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      height: 18px;
+      overflow: hidden;
+      box-shadow: 4px 4px 0 var(--ink);
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: repeating-linear-gradient(45deg, var(--hot-pink), var(--hot-pink) 12px, var(--sun) 12px, var(--sun) 24px);
+      transition: width 240ms ease;
+    }
+
+    .question-card { display: none; margin-top: 14px; }
+    .question-card.active { display: block; }
+
+    .question-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .question-number {
+      min-width: 54px;
+      height: 54px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--cyan);
+      border: 3px solid var(--ink);
+      border-radius: 50%;
+      font-weight: 800;
+      box-shadow: 4px 4px 0 var(--ink);
+    }
+
+    .question-title {
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 800;
+      margin: 0;
+      letter-spacing: -0.7px;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+      gap: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .option {
+      text-align: left;
+      border: 3px solid var(--ink);
+      background: #fff;
+      padding: 16px;
+      border-radius: 18px;
+      cursor: pointer;
+      box-shadow: 5px 5px 0 rgba(42,26,47,0.92);
+      transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease;
+      font-family: inherit;
+    }
+
+    .option:hover {
+      transform: translate(-2px, -2px) rotate(-0.4deg);
+      box-shadow: 7px 7px 0 rgba(42,26,47,0.92);
+      background: #fff8c9;
+    }
+
+    .option.selected {
+      background: linear-gradient(135deg, #fff8c9, #ffd6f0);
+      outline: 4px solid var(--hot-pink);
+    }
+
+    .option .label {
+      margin: 0 0 6px 0;
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    .option .hint {
+      margin: 0;
+      font-size: 13px;
+      color: #6b4b75;
+      font-weight: 600;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+
+    .results { display: none; margin-top: 18px; }
+    .results.active { display: block; }
+
+    .result-hero {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .result-card {
+      padding: 20px;
+      border: 3px solid var(--ink);
+      border-radius: 20px;
+      background: linear-gradient(135deg, #fff, #ffd6f0 62%, #c8f6ff);
+      box-shadow: 7px 7px 0 var(--ink);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result-card h3 {
+      margin: 0 0 4px;
+      font-size: 30px;
+      text-transform: uppercase;
+      letter-spacing: -0.8px;
+    }
+
+    .result-card .project {
+      display: inline-block;
+      margin: 0 0 10px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--sun);
+      border: 2px solid var(--ink);
+      font-weight: 800;
+    }
+
+    .tagline {
+      font-weight: 800;
+      color: #64236b;
+      margin: 0 0 10px;
+      font-size: 17px;
+    }
+
+    .result-card p { margin: 0 0 10px; font-weight: 600; }
+    .result-card ul { margin: 8px 0 0 20px; padding: 0; font-weight: 600; }
+
+    .score-pill {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #fff;
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-weight: 800;
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    .runner-ups {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .runner {
+      background: #fff;
+      border: 3px solid var(--ink);
+      border-radius: 16px;
+      padding: 12px 14px;
+      box-shadow: 4px 4px 0 var(--ink);
+    }
+
+    .runner strong { display: block; }
+    .runner small { color: #6b4b75; font-weight: 700; }
+
+    .score-bar {
+      height: 10px;
+      margin-top: 10px;
+      background: #f1e8f4;
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .score-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--mint), var(--cyan));
+      width: 0%;
+    }
+
+    .confetti {
+      position: fixed;
+      top: -12px;
+      width: 9px;
+      height: 16px;
+      opacity: 0.9;
+      animation: fall 3.5s linear forwards;
+      z-index: 10;
+      pointer-events: none;
+      border: 1px solid rgba(42,26,47,0.35);
+    }
+
+    @keyframes fall {
+      to { transform: translateY(120vh) rotate(640deg); opacity: 0.1; }
+    }
+
+    @media (max-width: 720px) {
+      body { padding: 16px 12px 64px; }
+      header { grid-template-columns: 1fr; }
+      .cover-star { width: auto; transform: rotate(0deg); }
+      .mag-card, .question-card, .results { padding: 17px; box-shadow: 6px 6px 0 rgba(42,26,47,0.9); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <div>
+        <div class="kicker">💘 Camino Crush Quiz <span>Special Issue</span></div>
+        <h1>Which 90s Heartthrob Is Your Perfect Project Match?</h1>
+        <p class="subhead">Answer six deeply scientific magazine-style questions to reveal your dream 90s crush — and the Camino case study you were destined to fall for.</p>
+      </div>
+      <div class="cover-star">Free inside!<small>One totally accurate personality diagnosis</small></div>
+    </header>
+
+    <div class="mag-card hero" id="intro">
+      <div class="flex-row">
+        <div>
+          <h2 style="margin:4px 0 6px 0;">Ready to meet your match?</h2>
+          <p style="margin:0;color:#5f3e6b;font-weight:600;">Your possible crushes are Hugh Grant, Robbie Williams, Leonardo DiCaprio, Will Smith, Keanu Reeves, and David Beckham.</p>
+        </div>
+        <div style="flex:1"></div>
+        <button class="cta" id="startBtn">Start the quiz →</button>
+      </div>
+    </div>
+
+    <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+    <div id="quiz"></div>
+
+    <div class="results" id="results">
+      <div class="result-hero" id="topResult"></div>
+      <h4 style="margin:18px 0 6px 0;color:#472d53;font-size:20px;">Your almost-crushes</h4>
+      <div class="runner-ups" id="runnerUps"></div>
+      <div class="nav" style="margin-top:18px;">
+        <button class="cta secondary" id="restartBtn">Take it again</button>
+        <span style="color:#5f3e6b;font-size:13px;font-weight:700;">Load this file in Chrome to play offline.</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const caseStudies = {
+      eva: {
+        celebrity: 'Hugh Grant',
+        project: 'EVA Avatar',
+        emoji: '☕',
+        tagline: 'Charming, conversational, and disarmingly clever',
+        intro: 'You are a sucker for wit, warmth, and someone who knows exactly what to say. EVA is your match: a compliant conversational AI avatar that makes complex science feel natural, engaging, and surprisingly human.',
+        bullets: [
+          'Keyboard-led natural language answers with human gestures and compliant guardrails.',
+          'Scalable content updates, localisation across Europe, and web embedding.',
+          '72% of HCPs found it very engaging; 83% rated it very or extremely educational.'
+        ]
+      },
+      wordle: {
+        celebrity: 'Robbie Williams',
+        project: 'Wordle Encephalitis Day 2025',
+        emoji: '🎤',
+        tagline: 'The cheeky showstopper everyone talks about',
+        intro: 'You love big energy, instant memorability, and a little theatrical flair. Wordle Encephalitis Day is your match: a bold awareness campaign that turned playful creative into a global wake-up call.',
+        bullets: [
+          'Times Square and Piccadilly billboards with Wordle-style creative and medical messaging.',
+          'QR-driven activation to a campaign microsite plus multi-platform cutdowns.',
+          '15.1M billboard impressions, 3-minute average dwell time, and 300 QR-driven visits.'
+        ]
+      },
+      oa: {
+        celebrity: 'Leonardo DiCaprio',
+        project: 'OA Landscapes',
+        emoji: '🎬',
+        tagline: 'Glossy, tailored, and impossible to ignore',
+        intro: 'You like polish, drama, and an experience that feels made just for you. OA Landscapes is your match: an immersive booth experience that transformed osteoarthritis evidence into personalised data journeys.',
+        bullets: [
+          'Five-question flow produced tailored infographics delivered by postcard and email.',
+          'Omnichannel microsite follow-up kept content evergreen and compliant.',
+          '4.9/5 average rating, 80% iPad-to-microsite conversion, and 32 new segmented HCP e-consents.'
+        ]
+      },
+      velocity: {
+        celebrity: 'Will Smith',
+        project: 'VELOCITY Medical',
+        emoji: '🚀',
+        tagline: 'High-energy, mission-ready, and born to lead',
+        intro: 'You fall for confidence, momentum, and someone who can bring the whole room along. VELOCITY is your match: an 18-month launch journey that turned medical teams into mission-ready leaders.',
+        bullets: [
+          'Personalised role-based learning over 18 months across countries and roles.',
+          'Creative delivery via live events, puppet-led videos, and a mission-control microsite with 9,844 visits.',
+          'Boosted knowledge and alignment scores by around 40% and reset the standard for launch readiness.'
+        ]
+      },
+      lumina: {
+        celebrity: 'Keanu Reeves',
+        project: 'Lúmina Workshops',
+        emoji: '🕶️',
+        tagline: 'Thoughtful, curious, and quietly brilliant',
+        intro: 'You are drawn to depth, calm confidence, and people who make you think differently. Lúmina is your match: hands-on workshops that move pharma teams from AI anxiety to confident, compliant action.',
+        bullets: [
+          'Explores efficiency, value, and innovation use cases in a hands-on, jargon-free way.',
+          'Teams leave with tailored ideas and next-day-ready AI experiments.',
+          'Participants called it “the only workshop that was truly groundbreaking.”'
+        ]
+      },
+      goldfish: {
+        celebrity: 'David Beckham',
+        project: 'Project Goldfish',
+        emoji: '⚽',
+        tagline: 'Effortlessly polished and seriously efficient',
+        intro: 'You appreciate reliability, precision, and making hard things look easy. Project Goldfish is your match: AI-powered abstract triage that turned thousands of congress abstracts into next-day expert-reviewed summaries.',
+        bullets: [
+          'Scraped, processed, and summarised abstracts overnight for non-technical teams.',
+          'A web tool reclaimed hours, sharpened focus, and made insights instant across therapy areas.',
+          '99% content accuracy, review time down 74%, and around £24.8k value saved per event.'
+        ]
+      }
+    };
+
+    const quizData = [
+      {
+        question: 'What is your perfect date?',
+        options: [
+          { text: 'Coffee, awkward flirting, and a bookshop you both pretend you found by accident.', hint: 'Very charming romantic lead.', weights: { eva: 3, wordle: 0, oa: 0, velocity: 0, lumina: 1, goldfish: 0 } },
+          { text: 'Front row at a sold-out concert, then dancing until your mascara gives up.', hint: 'Main character pop-star energy.', weights: { eva: 0, wordle: 3, oa: 0, velocity: 0, lumina: 0, goldfish: 0 } },
+          { text: 'A glamorous dinner somewhere with white tablecloths and suspiciously tiny desserts.', hint: 'Movie-star polish.', weights: { eva: 0, wordle: 0, oa: 3, velocity: 0, lumina: 0, goldfish: 1 } },
+          { text: 'Something high-energy: theme park, laser quest, karaoke, possibly all three.', hint: 'Big launch energy.', weights: { eva: 0, wordle: 1, oa: 0, velocity: 3, lumina: 0, goldfish: 0 } },
+          { text: 'A rainy walk, deep conversation, and absolutely no need to impress anyone.', hint: 'Quietly profound.', weights: { eva: 1, wordle: 0, oa: 0, velocity: 0, lumina: 3, goldfish: 0 } },
+          { text: 'VIP seats, perfect timing, zero chaos, and a clean exit strategy.', hint: 'Classy and efficient.', weights: { eva: 0, wordle: 0, oa: 1, velocity: 0, lumina: 0, goldfish: 3 } }
+        ]
+      },
+      {
+        question: 'Your crush leaves you a voicemail. What is the vibe?',
+        options: [
+          { text: 'A slightly flustered but adorable monologue that somehow wins you over.', weights: { eva: 3, wordle: 0, oa: 0, velocity: 0, lumina: 1, goldfish: 0 } },
+          { text: 'A cheeky one-liner followed by a chorus everyone knows.', weights: { eva: 0, wordle: 3, oa: 0, velocity: 0, lumina: 0, goldfish: 0 } },
+          { text: 'Smooth, cinematic, and clearly recorded near a balcony.', weights: { eva: 0, wordle: 0, oa: 3, velocity: 0, lumina: 0, goldfish: 0 } },
+          { text: 'Loud, funny, and somehow turns into a motivational speech.', weights: { eva: 0, wordle: 0, oa: 0, velocity: 3, lumina: 0, goldfish: 0 } },
+          { text: 'Low-key, thoughtful, and unexpectedly wise.', weights: { eva: 0, wordle: 0, oa: 0, velocity: 0, lumina: 3, goldfish: 0 } },
+          { text: 'Brief, useful, and includes the exact plan for later.', weights: { eva: 0, wordle: 0, oa: 0, velocity: 0, lumina: 0, goldfish: 3 } }
+        ]
+      },
+      {
+        question: 'Which poster is going straight on your bedroom wall?',
+        options: [
+          { text: 'The charming rom-com hero in a slightly rumpled shirt.', weights: { eva: 3, wordle: 0, oa: 0, velocity: 0, lumina: 0, goldfish: 0 } },
+          { text: 'The cheeky pop icon with frosted tips and a microphone.', weights: { eva: 0, wordle: 3, oa: 0, velocity: 0, lumina: 0, goldfish: 0 } },
+          { text: 'The Hollywood golden boy looking windswept and expensive.', weights: { eva: 0, wordle: 0, oa: 3, velocity: 0, lumina: 0, goldfish: 0 } },
+          { text: 'The blockbuster hero mid-action pose.', weights: { eva: 0, wordle: 0, oa: 0, velocity: 3, lumina: 0, goldfish: 0 } },
+          { text: 'The mysterious outsider in black sunglasses.', weights: { eva: 0, wordle: 0, oa: 0, velocity: 0, lumina: 3, goldfish: 0 } },
+          { text: 'The football icon with perfect hair and perfect control.', weights: { eva: 0, wordle: 0, oa: 0, velocity: 0, lumina: 0, goldfish: 3 } }
+        ]
+      },
+      {
+        question: 'What quality makes you swoon?',
+        options: [
+          { text: 'Effortless conversation', hint: 'Someone who makes complex things feel easy.', weights: { eva: 3, wordle: 0, oa: 0, velocity: 0, lumina: 1, goldfish: 0 } },
+          { text: 'Unforgettable confidence', hint: 'The room notices when they arrive.', weights: { eva: 0, wordle: 3, oa: 0, velocity: 1, lumina: 0, goldfish: 0 } },
+          { text: 'Personal attention', hint: 'It feels tailored just for you.', weights: { eva: 0, wordle: 0, oa: 3, velocity: 0, lumina: 0, goldfish: 1 } },
+          { text: 'Leadership', hint: 'They get everyone moving in the same direction.', weights: { eva: 0, wordle: 0, oa: 0, velocity: 3, lumina: 1, goldfish: 0 } },
+          { text: 'Brains without ego', hint: 'Smart, calm, and genuinely useful.', weights: { eva: 0, wordle: 0, oa: 0, velocity: 0, lumina: 3, goldfish: 1 } },
+          { text: 'Speed and precision', hint: 'No drama, just results.', weights: { eva: 0, wordle: 0, oa: 0, velocity: 0, lumina: 1, goldfish: 3 } }
+        ]
+      },
+      {
+        question: 'Pick your 90s accessory.',
+        options: [
+          { text: 'A tiny notebook full of witty comebacks.', weights: { eva: 3, wordle: 0, oa: 0, velocity: 0, lumina: 1, goldfish: 0 } },
+          { text: 'A glittery microphone keyring.', weights: { eva: 0, wordle: 3, oa: 0, velocity: 0, lumina: 0, goldfish: 0 } },
+          { text: 'Oval sunglasses and a velvet jacket.', weights: { eva: 0, wordle: 0, oa: 3, velocity: 0, lumina: 0, goldfish: 0 } },
+          { text: 'A bomber jacket and a very confident grin.', weights: { eva: 0, wordle: 0, oa: 0, velocity: 3, lumina: 0, goldfish: 0 } },
+          { text: 'A black trench coat and a calm expression.', weights: { eva: 0, wordle: 0, oa: 0, velocity: 0, lumina: 3, goldfish: 0 } },
+          { text: 'A Nokia, a fixture list, and immaculate trainers.', weights: { eva: 0, wordle: 0, oa: 0, velocity: 0, lumina: 0, goldfish: 3 } }
+        ]
+      },
+      {
+        question: 'What kind of love story are you looking for?',
+        options: [
+          { text: 'One where the conversation is so good you forget the time.', weights: { eva: 3, wordle: 0, oa: 0, velocity: 0, lumina: 1, goldfish: 0 } },
+          { text: 'One with a huge romantic gesture and everyone watching.', weights: { eva: 0, wordle: 3, oa: 0, velocity: 0, lumina: 0, goldfish: 0 } },
+          { text: 'One that feels luxurious, personal, and beautifully designed.', weights: { eva: 0, wordle: 0, oa: 3, velocity: 0, lumina: 0, goldfish: 1 } },
+          { text: 'One where you build confidence and take on the world together.', weights: { eva: 0, wordle: 0, oa: 0, velocity: 3, lumina: 1, goldfish: 0 } },
+          { text: 'One where you both learn, grow, and try something new.', weights: { eva: 0, wordle: 0, oa: 0, velocity: 0, lumina: 3, goldfish: 0 } },
+          { text: 'One where everything clicks quickly and brilliantly.', weights: { eva: 0, wordle: 0, oa: 0, velocity: 0, lumina: 0, goldfish: 3 } }
+        ]
+      }
+    ];
+
+    const state = { current: 0, answers: Array(quizData.length).fill(null) };
+
+    const quizEl = document.getElementById('quiz');
+    const progressBar = document.getElementById('progressBar');
+    const resultsEl = document.getElementById('results');
+    const introEl = document.getElementById('intro');
+    const startBtn = document.getElementById('startBtn');
+    const restartBtn = document.getElementById('restartBtn');
+
+    startBtn.addEventListener('click', () => {
+      introEl.style.display = 'none';
+      renderQuestion();
+    });
+
+    restartBtn.addEventListener('click', () => {
+      state.current = 0;
+      state.answers = Array(quizData.length).fill(null);
+      resultsEl.classList.remove('active');
+      quizEl.style.display = 'block';
+      introEl.style.display = 'none';
+      renderQuestion();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    function renderQuestion() {
+      resultsEl.classList.remove('active');
+      quizEl.innerHTML = '';
+      quizData.forEach((q, i) => {
+        const card = document.createElement('div');
+        card.className = 'question-card' + (i === state.current ? ' active' : '');
+        const head = document.createElement('div');
+        head.className = 'question-head';
+        head.innerHTML = `
+          <div class="question-number">${i + 1}/${quizData.length}</div>
+          <p class="question-title">${q.question}</p>
+        `;
+        card.appendChild(head);
+
+        const options = document.createElement('div');
+        options.className = 'options';
+        q.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'option' + (state.answers[i] === idx ? ' selected' : '');
+          btn.innerHTML = `
+            <p class="label">${opt.text}</p>
+            ${opt.hint ? '<p class="hint">' + opt.hint + '</p>' : ''}
+          `;
+          btn.addEventListener('click', () => {
+            state.answers[i] = idx;
+            renderQuestion();
+            if (i < quizData.length - 1) {
+              setTimeout(() => {
+                state.current = i + 1;
+                renderQuestion();
+                scrollToCard(i + 1);
+              }, 80);
+            } else {
+              showResults();
+            }
+          });
+          options.appendChild(btn);
+        });
+        card.appendChild(options);
+
+        const nav = document.createElement('div');
+        nav.className = 'nav';
+        nav.innerHTML = `
+          <button class="cta secondary" ${i === 0 ? 'disabled style="opacity:0.45;cursor:not-allowed;"' : ''} data-prev>← Back</button>
+          <div class="flex-row">
+            <span style="color:#5f3e6b;font-size:13px;font-weight:800;">Question ${i + 1} of ${quizData.length}</span>
+            <button class="cta" data-next>${i === quizData.length - 1 ? 'Reveal my crush →' : 'Next →'}</button>
+          </div>
+        `;
+        const nextBtn = nav.querySelector('[data-next]');
+        const prevBtn = nav.querySelector('[data-prev]');
+
+        if (state.answers[i] === null) {
+          nextBtn.disabled = true;
+          nextBtn.style.opacity = 0.5;
+          nextBtn.style.cursor = 'not-allowed';
+        }
+        nextBtn.addEventListener('click', () => {
+          if (state.answers[i] === null) return;
+          if (i === quizData.length - 1) showResults();
+          else {
+            state.current = i + 1;
+            renderQuestion();
+            scrollToCard(i + 1);
+          }
+        });
+        prevBtn.addEventListener('click', () => {
+          if (i === 0) return;
+          state.current = i - 1;
+          renderQuestion();
+          scrollToCard(i - 1);
+        });
+
+        card.appendChild(nav);
+        quizEl.appendChild(card);
+      });
+      quizEl.style.display = 'block';
+      updateProgress();
+    }
+
+    function scrollToCard(index) {
+      const cards = document.querySelectorAll('.question-card');
+      const target = cards[index];
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function updateProgress() {
+      const answered = state.answers.filter(a => a !== null).length;
+      progressBar.style.width = Math.round((answered / quizData.length) * 100) + '%';
+    }
+
+    function showResults() {
+      const scores = { eva: 0, wordle: 0, oa: 0, velocity: 0, lumina: 0, goldfish: 0 };
+      state.answers.forEach((answerIdx, qIdx) => {
+        if (answerIdx === null) return;
+        const weights = quizData[qIdx].options[answerIdx].weights;
+        Object.keys(weights).forEach(key => { scores[key] += weights[key]; });
+      });
+      const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+      const top = sorted[0];
+      renderTopResult(top[0], top[1]);
+      renderRunnerUps(sorted);
+      resultsEl.classList.add('active');
+      quizEl.style.display = 'none';
+      triggerConfetti();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderTopResult(id, score) {
+      const wrap = document.getElementById('topResult');
+      wrap.innerHTML = '';
+      const data = caseStudies[id];
+      const card = document.createElement('div');
+      card.className = 'result-card';
+      card.innerHTML = `
+        <div class="score-pill">★ ${score} pts</div>
+        <h3>${data.emoji} ${data.celebrity}</h3>
+        <p class="project">Your Camino match: ${data.project}</p>
+        <p class="tagline">${data.tagline}</p>
+        <p>${data.intro}</p>
+        <ul>${data.bullets.map(b => '<li>' + b + '</li>').join('')}</ul>
+        <p style="margin-top:14px;color:#64236b;font-weight:800;">Why you matched: your answers gave major ${data.celebrity} energy.</p>
+      `;
+      wrap.appendChild(card);
+    }
+
+    function renderRunnerUps(sorted) {
+      const wrap = document.getElementById('runnerUps');
+      wrap.innerHTML = '';
+      const maxScore = sorted[0][1] || 1;
+      sorted.slice(1).forEach(([id, score]) => {
+        const data = caseStudies[id];
+        const runner = document.createElement('div');
+        runner.className = 'runner';
+        const pct = Math.round((score / maxScore) * 100);
+        runner.innerHTML = `
+          <strong>${data.emoji} ${data.celebrity}</strong>
+          <small>${data.project}</small>
+          <div class="score-bar"><div class="score-fill" style="width:${pct}%;"></div></div>
+        `;
+        wrap.appendChild(runner);
+      });
+    }
+
+    function triggerConfetti() {
+      for (let i = 0; i < 46; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti';
+        piece.style.left = Math.random() * 100 + 'vw';
+        piece.style.background = [ '#ff4fb8', '#ffd447', '#8d5cff', '#39d5ff', '#6df7c1', '#ff725e' ][Math.floor(Math.random() * 6)];
+        piece.style.animationDelay = (Math.random() * 0.9) + 's';
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 3900);
+      }
+    }
+  </script>
+</body>
+</html>
