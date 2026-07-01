@@ -9,3 +9,9 @@ E.g:
 - https://scenicroute.caminocomms.com/gold-fish/
 
 The original crossword game is served at both the site root and prefix `crossword`. 
+
+## Adding a new game
+
+Create a folder with the name of the required path prefix and upload the `index.html` file (+ external assests if required etc). Ensure the `.html` file is named to `index.html`.
+
+On committing, the GitHub Actions pages deploy will automatically run, upon success the new game will be accessible at https://scenicroute.caminocomms.com/{folder-name}
