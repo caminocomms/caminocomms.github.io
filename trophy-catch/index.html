@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Trophy Catch</title>
+<style>
+  body {
+    margin: 0;
+    background: #05070c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+  #tc-root {
+    --gold:#FFB511; --gold-dark:#8a6a1e; --navy:#121C33; --navy2:#1c2946; --red:#7a1f2b; --cream:#f3ead8;
+    max-width: 640px;
+    width: 100%;
+    margin: 20px;
+    user-select: none;
+  }
+  #tc-panel {
+    background: linear-gradient(180deg, var(--navy) 0%, var(--navy2) 100%);
+    border-radius: 16px;
+    padding: 14px 16px 18px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+  }
+  #tc-logo-row { display:flex; flex-direction:column; align-items:center; margin-bottom:2px; }
+  #tc-logo-row svg { width: 92px; height: auto; display:block; }
+  #tc-presents { color:#8994ac; font-size:9px; letter-spacing:2.5px; text-transform:uppercase; margin-top:3px; }
+  #tc-title { color: var(--gold); font-size: 22px; font-weight: 800; letter-spacing: 1px; text-align:center; text-shadow: 0 2px 6px rgba(0,0,0,0.4); margin-top: 6px; }
+  #tc-tagline { color: #b9c2d6; font-size: 12px; text-align:center; margin-top:2px; margin-bottom:8px; }
+  #tc-hud { display:flex; justify-content: space-between; align-items:center; margin-bottom: 8px; padding: 0 4px; }
+  #tc-score { color: var(--cream); font-size: 14px; font-weight: 700; }
+  #tc-combo { color: #ff9d4d; font-size: 13px; font-weight: 700; opacity:0; }
+  #tc-lives { color: var(--cream); font-size: 16px; }
+  #tc-canvas-wrap { position:relative; border-radius: 12px; overflow:hidden; border: 2px solid #2a3550; box-shadow: inset 0 0 40px rgba(0,0,0,0.5); }
+  canvas { display:block; width:100%; height:auto; background:#0b1220; touch-action:none; cursor: none; }
+  #tc-overlay { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; background: rgba(11,18,32,0.92); color: var(--cream); padding: 20px; }
+  #tc-overlay button { background: linear-gradient(180deg, var(--gold), var(--gold-dark)); color:#241a05; border:none; padding: 12px 28px; border-radius: 999px; font-weight: 800; font-size: 15px; cursor:pointer; box-shadow: 0 4px 14px rgba(255,181,17,0.35); }
+  #tc-footer { text-align:center; margin-top:10px; color:#8994ac; font-size:11px; }
+</style>
+</head>
+<body>
+
+<div id="tc-root">
+  <div id="tc-panel">
+
+    <div id="tc-logo-row">
+      <svg viewBox="0 0 468 116" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M40.9156 5.64706C40.9156 2.53394 43.4479 0 46.5591 0C49.6703 0 52.2026 2.53394 52.2026 5.64706C52.2026 8.76018 49.6703 11.2941 46.5591 11.2941C43.4479 11.2941 40.9156 8.76018 40.9156 5.64706Z" fill="#FFB511"/>
+        <path d="M47.2089 46.6616C61.5402 46.6796 71.7267 39.304 71.7267 39.304L62.4066 90.5962C62.4066 90.5962 55.5923 96.1027 41.5654 96.1027C17.5628 96.1027 0 78.3882 0 56.5733C0 34.7348 19.4596 17.0438 43.4622 17.0438C44.0944 17.0438 44.7032 17.0673 45.312 17.0907L43.924 23.0626C37.1397 22.5754 28.4206 25.6456 25.712 31.3336C21.7884 39.5727 31.1293 46.6414 47.2089 46.6616Z" fill="#FFB511"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M444 72.8C452.174 72.8 458.8 66.1738 458.8 58C458.8 49.8262 452.174 43.2 444 43.2C435.826 43.2 429.2 49.8262 429.2 58C429.2 66.1738 435.826 72.8 444 72.8ZM444 82C457.255 82 468 71.2548 468 58C468 44.7452 457.255 34 444 34C430.745 34 420 44.7452 420 58C420 71.2548 430.745 82 444 82Z" fill="white"/>
+        <path d="M366.461 81H357.289V35H359.759L387.923 61.84V35H397.095V81H394.567L366.461 54.0787V81Z" fill="white"/>
+        <path d="M315.606 35H324.778V81H315.606V35Z" fill="white"/>
+        <path d="M249.989 81H240.817L244.345 35H246.697L263.16 52.9615L279.682 35H282.093L285.562 81H276.389L274.39 54.3139L263.219 66.4262L252.047 54.3139L249.989 81Z" fill="white"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M209.565 81H220.031L194.884 35H192.147L167.055 81H177.521L181.695 73.2467H205.332L209.565 81ZM193.572 51.6092L186.752 64.0743H200.393L193.572 51.6092Z" fill="white"/>
+        <path d="M131.933 34C139.727 34 146.661 37.7538 151.018 43.5385L152 44.8308L144.717 50.4261C142.134 46.0986 137.405 43.2002 131.999 43.2002C123.825 43.2002 117.199 49.8264 117.199 58.0002C117.199 66.174 123.825 72.8002 131.999 72.8002C137.405 72.8002 142.134 69.9017 144.717 65.574L152 71.1692L151.018 72.4615C146.661 78.3077 139.727 82 131.933 82C118.739 82 108 71.2308 108 58C108 44.7692 118.739 34 131.933 34Z" fill="white"/>
+      </svg>
+      <div id="tc-presents">presents</div>
+    </div>
+
+    <div id="tc-title">🏆 TROPHY CATCH 🏆</div>
+    <div id="tc-tagline">Catch the awards. Dodge the tomatoes. Keep the streak alive.</div>
+
+    <div id="tc-hud">
+      <div id="tc-score">SCORE: <span id="tc-score-val">0</span></div>
+      <div id="tc-combo">🔥 x1</div>
+      <div id="tc-lives">❤️❤️❤️</div>
+    </div>
+
+    <div id="tc-canvas-wrap">
+      <canvas id="tc-canvas" width="600" height="440"></canvas>
+      <div id="tc-overlay">
+        <div style="font-size: 40px; margin-bottom: 4px;">🏆</div>
+        <div style="font-size: 20px; font-weight: 800; color: var(--gold); margin-bottom: 6px;">Ready to walk the carpet?</div>
+        <div style="font-size: 13px; color:#c7cede; max-width: 380px; line-height:1.5; margin-bottom: 16px;">
+          Move with ← → arrows, mouse, or drag your finger.<br>
+          Catch trophies, stars, and envelopes for points.<br>
+          Avoid the tomatoes — three hits and the show's over.
+        </div>
+        <button id="tc-start">Start Show</button>
+      </div>
+    </div>
+
+    <div id="tc-footer">← → or drag to move · catch gold, dodge red</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const canvas = document.getElementById('tc-canvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const overlay = document.getElementById('tc-overlay');
+  const startBtn = document.getElementById('tc-start');
+  const scoreEl = document.getElementById('tc-score-val');
+  const comboEl = document.getElementById('tc-combo');
+  const livesEl = document.getElementById('tc-lives');
+
+  let player = { x: W/2, y: H-46, w: 84, h: 26, targetX: W/2 };
+  let items = [];
+  let particles = [];
+  let score = 0, lives = 3, combo = 0;
+  let running = false;
+  let spawnTimer = 0, spawnInterval = 70;
+  let shakeT = 0;
+
+  const GOOD_TYPES = [
+    { kind: 'trophy', points: 10, weight: 60, size: 40 },
+    { kind: 'star', points: 25, weight: 15, size: 38 },
+    { kind: 'envelope', points: 40, weight: 10, size: 38, bonus:true }
+  ];
+  const BAD_TYPE = { kind: 'tomato', size: 36, weight: 20 };
+
+  function pickType(){
+    const totalWeight = GOOD_TYPES.reduce((a,t)=>a+t.weight,0) + BAD_TYPE.weight;
+    let r = Math.random()*totalWeight;
+    for(const t of GOOD_TYPES){ if(r < t.weight) return Object.assign({}, t, {bad:false}); r -= t.weight; }
+    return Object.assign({}, BAD_TYPE, {bad:true});
+  }
+
+  function spawnItem(){
+    const t = pickType();
+    const speed = 2.2 + Math.min(score/120, 4.5) + Math.random()*1.2;
+    items.push({
+      x: 30 + Math.random()*(W-60),
+      y: -30,
+      vy: speed,
+      type: t,
+      rot: (Math.random()-0.5)*0.3,
+      vr: (Math.random()-0.5)*0.03
+    });
+  }
+
+  function spawnConfetti(x,y, color){
+    for(let i=0;i<14;i++){
+      particles.push({
+        x, y,
+        vx: (Math.random()-0.5)*6,
+        vy: -Math.random()*5-2,
+        g: 0.25,
+        life: 40+Math.random()*20,
+        color: color || ['#FFB511','#f3ead8','#ff9d4d','#7a1f2b'][Math.floor(Math.random()*4)],
+        size: 3+Math.random()*3
+      });
+    }
+  }
+
+  function resetGame(){
+    items = []; particles = [];
+    score = 0; lives = 3; combo = 0;
+    spawnTimer = 0; spawnInterval = 70;
+    player.x = W/2; player.targetX = W/2;
+    updateHUD();
+  }
+
+  function updateHUD(){
+    scoreEl.textContent = score;
+    livesEl.textContent = '❤️'.repeat(Math.max(lives,0)) + '🖤'.repeat(Math.max(3-lives,0));
+    if(combo >= 2){
+      comboEl.style.opacity = 1;
+      comboEl.textContent = '🔥 x' + combo;
+    } else {
+      comboEl.style.opacity = 0;
+    }
+  }
+
+  function drawBackground(){
+    const g = ctx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0,'#0b1220');
+    g.addColorStop(0.7,'#141d33');
+    g.addColorStop(1,'#1b1030');
+    ctx.fillStyle = g;
+    ctx.fillRect(0,0,W,H);
+
+    for(const cx of [W*0.22, W*0.5, W*0.78]){
+      const sg = ctx.createRadialGradient(cx, 0, 10, cx, H*0.55, 260);
+      sg.addColorStop(0, 'rgba(255,240,200,0.10)');
+      sg.addColorStop(1, 'rgba(255,240,200,0)');
+      ctx.fillStyle = sg;
+      ctx.beginPath();
+      ctx.moveTo(cx-70,0); ctx.lineTo(cx+70,0); ctx.lineTo(cx+180,H*0.6); ctx.lineTo(cx-180,H*0.6);
+      ctx.closePath(); ctx.fill();
+    }
+
+    ctx.fillStyle = 'rgba(122,31,43,0.55)';
+    ctx.fillRect(0,0,26,H);
+    ctx.fillRect(W-26,0,26,H);
+
+    const carpetY = H-30;
+    ctx.fillStyle = '#5c1420';
+    ctx.fillRect(0, carpetY, W, 30);
+    ctx.fillStyle = 'rgba(255,255,255,0.06)';
+    for(let i=0;i<W;i+=24){
+      ctx.fillRect(i, carpetY, 12, 30);
+    }
+  }
+
+  function drawPlayer(){
+    const px = player.x, py = player.y;
+    ctx.save();
+    ctx.translate(px, py);
+    ctx.fillStyle = '#20304f';
+    ctx.strokeStyle = '#FFB511';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(-player.w/2, 0);
+    ctx.lineTo(player.w/2, 0);
+    ctx.lineTo(player.w/2 - 8, player.h);
+    ctx.lineTo(-player.w/2 + 8, player.h);
+    ctx.closePath();
+    ctx.fill(); ctx.stroke();
+    ctx.font = '22px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('🎤', 0, -6);
+    ctx.restore();
+  }
+
+  // ---- Vector item icons (high contrast against the dark stage) ----
+
+  function drawGlow(cx, cy, r, color){
+    const glow = ctx.createRadialGradient(cx, cy, 2, cx, cy, r);
+    glow.addColorStop(0, color);
+    glow.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = glow;
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.fill();
+  }
+
+  function drawTrophyIcon(cx, cy, size, rot){
+    const s = size/40;
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(rot);
+    drawGlow(0, -2, 28, 'rgba(255,181,17,0.30)');
+    ctx.scale(s, s);
+    ctx.lineJoin = 'round';
+
+    ctx.fillStyle = '#8a6a1e';
+    ctx.strokeStyle = '#2b1d05';
+    ctx.lineWidth = 2.2;
+    ctx.beginPath();
+    ctx.moveTo(-11, 16); ctx.lineTo(11, 16); ctx.lineTo(8, 21); ctx.lineTo(-8, 21);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+
+    ctx.fillStyle = '#e0951a';
+    ctx.beginPath();
+    ctx.moveTo(-4, 7); ctx.lineTo(4, 7); ctx.lineTo(5, 16); ctx.lineTo(-5, 16);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = '#c8850f';
+    ctx.beginPath(); ctx.moveTo(-13,-16); ctx.quadraticCurveTo(-25,-14,-13,-3); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(13,-16); ctx.quadraticCurveTo(25,-14,13,-3); ctx.stroke();
+    ctx.lineWidth = 1.4;
+    ctx.strokeStyle = '#2b1d05';
+    ctx.beginPath(); ctx.moveTo(-13,-16); ctx.quadraticCurveTo(-25,-14,-13,-3); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(13,-16); ctx.quadraticCurveTo(25,-14,13,-3); ctx.stroke();
+
+    ctx.fillStyle = '#FFB511';
+    ctx.strokeStyle = '#2b1d05';
+    ctx.lineWidth = 2.2;
+    ctx.beginPath();
+    ctx.moveTo(-13, -20);
+    ctx.quadraticCurveTo(-17, -2, -6, 7);
+    ctx.lineTo(6, 7);
+    ctx.quadraticCurveTo(17, -2, 13, -20);
+    ctx.closePath();
+    ctx.fill(); ctx.stroke();
+
+    ctx.fillStyle = '#8a6a1e';
+    ctx.beginPath();
+    ctx.ellipse(0, -20, 13, 3.6, 0, 0, Math.PI*2);
+    ctx.fill();
+    ctx.lineWidth = 1.6;
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function drawStarIcon(cx, cy, size, rot){
+    const s = size/40;
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(rot);
+    drawGlow(0, 0, 26, 'rgba(255,200,60,0.35)');
+    ctx.scale(s, s);
+
+    ctx.beginPath();
+    const spikes = 5, outerR = 17, innerR = 7;
+    for(let i=0;i<spikes*2;i++){
+      const r = i % 2 === 0 ? outerR : innerR;
+      const a = (Math.PI/spikes)*i - Math.PI/2;
+      const px = Math.cos(a)*r, py = Math.sin(a)*r;
+      if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+    }
+    ctx.closePath();
+    ctx.fillStyle = '#e0951a';
+    ctx.fill();
+    ctx.strokeStyle = '#2b1d05';
+    ctx.lineWidth = 2.4;
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function drawEnvelopeIcon(cx, cy, size, rot){
+    const s = size/40;
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(rot);
+    drawGlow(0, 0, 26, 'rgba(243,234,216,0.3)');
+    ctx.scale(s, s);
+
+    ctx.strokeStyle = '#2b1d05';
+    ctx.lineWidth = 2.2;
+    ctx.fillStyle = '#e7ddc6';
+    ctx.beginPath();
+    ctx.rect(-16,-10,32,20);
+    ctx.fill(); ctx.stroke();
+
+    ctx.fillStyle = '#8a6a1e';
+    ctx.beginPath();
+    ctx.moveTo(-16,-10); ctx.lineTo(0,3); ctx.lineTo(16,-10);
+    ctx.closePath();
+    ctx.fill(); ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(0,3,4.2,0,Math.PI*2);
+    ctx.fillStyle = '#FFB511';
+    ctx.fill(); ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function drawTomatoIcon(cx, cy, size, rot){
+    const s = size/40;
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(rot);
+    drawGlow(0, 0, 24, 'rgba(140,20,20,0.35)');
+    ctx.scale(s, s);
+
+    ctx.beginPath();
+    ctx.arc(0, 2, 15, 0, Math.PI*2);
+    ctx.fillStyle = '#8f1a1a';
+    ctx.fill();
+    ctx.strokeStyle = '#2b0505';
+    ctx.lineWidth = 2.6;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.ellipse(-5,-3,4,2.4,-0.4,0,Math.PI*2);
+    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+    ctx.fill();
+
+    ctx.fillStyle = '#204527';
+    ctx.strokeStyle = '#0f2413';
+    ctx.lineWidth = 1.2;
+    for(const ang of [-0.9,-0.3,0.3,0.9]){
+      ctx.save();
+      ctx.rotate(ang);
+      ctx.beginPath();
+      ctx.moveTo(0,-13);
+      ctx.quadraticCurveTo(4,-19,0,-22);
+      ctx.quadraticCurveTo(-4,-19,0,-13);
+      ctx.closePath();
+      ctx.fill(); ctx.stroke();
+      ctx.restore();
+    }
+
+    ctx.restore();
+  }
+
+  function drawItems(){
+    for(const it of items){
+      if(it.type.kind === 'trophy') drawTrophyIcon(it.x, it.y, it.type.size, it.rot);
+      else if(it.type.kind === 'star') drawStarIcon(it.x, it.y, it.type.size, it.rot);
+      else if(it.type.kind === 'envelope') drawEnvelopeIcon(it.x, it.y, it.type.size, it.rot);
+      else if(it.type.kind === 'tomato') drawTomatoIcon(it.x, it.y, it.type.size, it.rot);
+    }
+  }
+
+  function drawParticles(){
+    for(const p of particles){
+      ctx.globalAlpha = Math.max(p.life/60, 0);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(p.x, p.y, p.size, p.size);
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  function rectsOverlap(ix, iy, ir, px, py, pw, ph){
+    return ix+ir > px-pw/2 && ix-ir < px+pw/2 && iy+ir > py && iy-ir < py+ph*0.7;
+  }
+
+  function loop(){
+    if(!running) return;
+    ctx.clearRect(0,0,W,H);
+
+    let shakeX = 0, shakeY = 0;
+    if(shakeT > 0){
+      shakeT--;
+      shakeX = (Math.random()-0.5)*8;
+      shakeY = (Math.random()-0.5)*8;
+    }
+    ctx.save();
+    ctx.translate(shakeX, shakeY);
+
+    drawBackground();
+
+    player.x += (player.targetX - player.x) * 0.22;
+    player.x = Math.max(player.w/2+4, Math.min(W-player.w/2-4, player.x));
+
+    spawnTimer++;
+    if(spawnTimer >= spawnInterval){
+      spawnTimer = 0;
+      spawnItem();
+      spawnInterval = Math.max(28, 70 - score/15);
+    }
+
+    for(let i=items.length-1;i>=0;i--){
+      const it = items[i];
+      it.y += it.vy;
+      it.rot += it.vr;
+
+      if(it.y > player.y - 10 && it.y < player.y + player.h && rectsOverlap(it.x, it.y, it.type.size*0.32, player.x, player.y, player.w, player.h)){
+        if(it.type.bad){
+          lives--;
+          combo = 0;
+          shakeT = 12;
+          spawnConfetti(it.x, it.y, '#8f1a1a');
+          if(lives <= 0){
+            endGame();
+          }
+        } else {
+          combo++;
+          const mult = 1 + Math.floor(combo/5)*0.5;
+          score += Math.round(it.type.points * mult);
+          spawnConfetti(it.x, it.y);
+        }
+        items.splice(i,1);
+        updateHUD();
+        continue;
+      }
+
+      if(it.y > H+30){
+        if(!it.type.bad) combo = 0;
+        items.splice(i,1);
+        updateHUD();
+      }
+    }
+
+    for(let i=particles.length-1;i>=0;i--){
+      const p = particles[i];
+      p.vy += p.g;
+      p.x += p.vx; p.y += p.vy;
+      p.life--;
+      if(p.life <= 0) particles.splice(i,1);
+    }
+
+    drawItems();
+    drawParticles();
+    drawPlayer();
+
+    ctx.restore();
+
+    requestAnimationFrame(loop);
+  }
+
+  function endGame(){
+    running = false;
+    let rank = 'Nominee';
+    if(score >= 500) rank = 'Living Legend';
+    else if(score >= 300) rank = 'Award Winner';
+    else if(score >= 150) rank = 'Fan Favorite';
+    overlay.innerHTML =
+      '<div style="font-size: 34px; margin-bottom:4px;">🎬</div>' +
+      '<div style="font-size: 20px; font-weight:800; color:var(--gold); margin-bottom:2px;">That\'s a wrap!</div>' +
+      '<div style="font-size: 14px; color:#c7cede; margin-bottom: 10px;">Final Score: <b style="color:#fff;">' + score + '</b> · Rank: <b style="color:#ff9d4d;">' + rank + '</b></div>' +
+      '<button id="tc-restart">Play Again</button>';
+    overlay.style.display = 'flex';
+    document.getElementById('tc-restart').addEventListener('click', beginGame);
+  }
+
+  function beginGame(){
+    overlay.style.display = 'none';
+    resetGame();
+    running = true;
+    requestAnimationFrame(loop);
+  }
+
+  startBtn.addEventListener('click', beginGame);
+
+  const keys = {};
+  window.addEventListener('keydown', (e)=>{
+    if(['ArrowLeft','ArrowRight'].includes(e.key)) e.preventDefault();
+    keys[e.key] = true;
+  });
+  window.addEventListener('keyup', (e)=>{ keys[e.key] = false; });
+
+  function keyLoop(){
+    if(running){
+      if(keys['ArrowLeft']) player.targetX -= 12;
+      if(keys['ArrowRight']) player.targetX += 12;
+      player.targetX = Math.max(0, Math.min(W, player.targetX));
+    }
+    requestAnimationFrame(keyLoop);
+  }
+  keyLoop();
+
+  function toCanvasX(clientX){
+    const rect = canvas.getBoundingClientRect();
+    return (clientX - rect.left) * (W / rect.width);
+  }
+
+  canvas.addEventListener('mousemove', (e)=>{
+    if(!running) return;
+    player.targetX = toCanvasX(e.clientX);
+  });
+  canvas.addEventListener('touchmove', (e)=>{
+    if(!running) return;
+    e.preventDefault();
+    player.targetX = toCanvasX(e.touches[0].clientX);
+  }, {passive:false});
+
+  drawBackground();
+  drawPlayer();
+})();
+</script>
+</body>
+</html>
